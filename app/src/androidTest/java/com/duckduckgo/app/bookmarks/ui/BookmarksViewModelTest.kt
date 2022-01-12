@@ -17,6 +17,7 @@
 package com.duckduckgo.app.bookmarks.ui
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.core.net.toUri
 import androidx.lifecycle.Observer
 import com.duckduckgo.app.CoroutineTestRule
 import kotlinx.coroutines.test.runTest
@@ -24,6 +25,8 @@ import com.duckduckgo.app.InstantSchedulersRule
 import com.duckduckgo.app.bookmarks.db.BookmarkEntity
 import com.duckduckgo.app.bookmarks.db.BookmarkFolderEntity
 import com.duckduckgo.app.bookmarks.model.*
+import com.duckduckgo.app.bookmarks.service.ExportSavedSitesResult
+import com.duckduckgo.app.bookmarks.service.ImportSavedSitesResult
 import com.duckduckgo.app.bookmarks.service.SavedSitesManager
 import com.duckduckgo.app.browser.favicon.FaviconManager
 import com.duckduckgo.app.pixels.AppPixelName
@@ -273,5 +276,31 @@ class BookmarksViewModelTest {
         testee.insertDeletedFolderBranch(bookmarkFolderBranch)
 
         verify(bookmarksRepository).insertFolderBranch(bookmarkFolderBranch)
+    }
+
+    @Test
+    fun whenImportBookmarksThenImportedSavedSitesCommand() = runTest {
+        val sampleUri = "sample/uri".toUri()
+        whenever(savedSitesManager.import(sampleUri)).thenReturn(ImportSavedSitesResult.Success(emptyList()))
+
+        testee.importBookmarks(sampleUri)
+
+        verify(savedSitesManager).import(sampleUri)
+        verify(commandObserver).onChanged(commandCaptor.capture())
+        assertNotNull(commandCaptor.value)
+        assertTrue(commandCaptor.value is BookmarksViewModel.Command.ImportedSavedSites)
+    }
+
+    @Test
+    fun whenExportBookmarksThenExportedSavedSitesCommand() = runTest {
+        val sampleUri = "sample/uri".toUri()
+        whenever(savedSitesManager.export(sampleUri)).thenReturn(ExportSavedSitesResult.NoSavedSitesExported)
+
+        testee.exportSavedSites(sampleUri)
+
+        verify(savedSitesManager).export(sampleUri)
+        verify(commandObserver).onChanged(commandCaptor.capture())
+        assertNotNull(commandCaptor.value)
+        assertTrue(commandCaptor.value is BookmarksViewModel.Command.ExportedSavedSites)
     }
 }
