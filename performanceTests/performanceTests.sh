@@ -25,13 +25,13 @@ function main() {
     local -r packageName="com.duckduckgo.mobile.android.debug"
 
     # To run specific test just add #test_name after first path. eg. com.duckduckgo.espresso.BasicKotlinTest#browser_openPopUp
-    local -r instrumentArguments="adb shell am instrument -w -m  --no-window-animation  -e debug false -e class 'com.duckduckgo.espresso.BasicKotlinTest' com.duckduckgo.mobile.android.debug.test/androidx.test.runner.AndroidJUnitRunner"
-
-    local -r instrumentArguments2="adb shell am instrument -w -m  --no-window-animation  -e debug false -e class 'com.duckduckgo.uiautomator.BasicTest' com.duckduckgo.mobile.android.debug.test/androidx.test.runner.AndroidJUnitRunner"
+    local -r instrumentArgument1="adb shell am instrument -w -m  --no-window-animation  -e debug false -e class 'com.duckduckgo.espresso.performance.PerformanceWebsiteTest' com.duckduckgo.mobile.android.debug.test/androidx.test.runner.AndroidJUnitRunner"
+    local -r instrumentArgument2="adb shell am instrument -w -m  --no-window-animation  -e debug false -e class 'com.duckduckgo.espresso.performance.PerformanceBookmarksTest' com.duckduckgo.mobile.android.debug.test/androidx.test.runner.AndroidJUnitRunner"
+    local -r instrumentArgument3="adb shell am instrument -w -m  --no-window-animation  -e debug false -e class 'com.duckduckgo.espresso.performance.PerformanceSettingsTest' com.duckduckgo.mobile.android.debug.test/androidx.test.runner.AndroidJUnitRunner"
 
     # Executes kotlin script which queries gfxinfo while running the automated tests
     kotlinc main.kt -include-runtime -d main.jar
-    java -jar main.jar "$packageName" "$instrumentArguments" "$instrumentArguments2"
+    java -jar main.jar "$packageName" "$instrumentArgument1" "$instrumentArgument2" "$instrumentArgument3"
 }
 
 main

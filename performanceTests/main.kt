@@ -89,11 +89,10 @@ private fun cutIrrelevantData(data : String) : String {
 
 private fun extractTestName(command : String) : String {
     return command
-        .split("com.duckduckgo.")[1]
+        .split(".espresso.performance.")[1]
         .split(" ")[0]
         .replace("\'", "")
         .replace("\"", "")
-        .replace(".", "-")
 }
 
 fun main(args: Array<String>) {

@@ -40,7 +40,7 @@ import org.junit.runner.RunWith
 
 
 @RunWith(AndroidJUnit4::class)
-class AppThemeTests {
+class AppThemeTest {
 
     @get:Rule
     var activityScenarioRule = activityScenarioRule<BrowserActivity>()
@@ -76,7 +76,7 @@ class AppThemeTests {
         onView(withId(R.id.toolbar)).check(matches(BackgroundColourMatcher(com.duckduckgo.mobile.android.R.color.white)))
     }
 
-    class BackgroundColourMatcher(private val color: Int) : TypeSafeMatcher<View>(View::class.java) {
+    private class BackgroundColourMatcher(private val color: Int) : TypeSafeMatcher<View>(View::class.java) {
         override fun matchesSafely(item: View): Boolean {
             if (item.background == null) {
                 return false

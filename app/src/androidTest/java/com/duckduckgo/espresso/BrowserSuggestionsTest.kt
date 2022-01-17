@@ -16,13 +16,15 @@
 
 package com.duckduckgo.espresso
 
-import androidx.test.espresso.Espresso.closeSoftKeyboard
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.closeSoftKeyboard
+import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isRoot
 import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.espresso.matcher.ViewMatchers.withSubstring
 import androidx.test.ext.junit.rules.activityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.duckduckgo.app.browser.BrowserActivity
@@ -31,27 +33,36 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
-// Change device language to Polish before running these tests
-
 @RunWith(AndroidJUnit4::class)
-class PolishLanguageTests {
+class BrowserSuggestionsTest {
 
     @get:Rule
     var activityScenarioRule = activityScenarioRule<BrowserActivity>()
 
     @Test
-    fun testAppPolishSettingsTranslations() {
-        onView(isRoot()).perform(waitForView(withId(R.id.browserMenu)))
-        closeSoftKeyboard()
+    fun testBrowserHints() {
+        onView(isRoot()).perform(waitForView(withId(R.id.omnibarTextInput)))
 
-        onView(withId(R.id.browserMenu)).perform(click())
-        onView(isRoot()).perform(waitForView(withId(R.id.settingsPopupMenuItem)))
-        onView(withId(R.id.settingsPopupMenuItem)).perform(click())
+        val keyboardAwareEditText = onView(
+            withId(R.id.omnibarTextInput),
+        )
+        keyboardAwareEditText.perform(click())
 
-        onView(withId(R.id.selectedThemeSetting)).check(matches(withText("Motyw")))
-        onView(withId(R.id.autocompleteToggle)).check(matches(withText("Pokaż sugestie autouzupełniania")))
-        onView(withId(R.id.setAsDefaultBrowserSetting)).check(matches(withText("Ustaw jako domyślną przeglądarkę")))
-        onView(withId(R.id.changeAppIconLabel)).check(matches(withText("Ikona aplikacji")))
-        onView(withId(R.id.accessibilitySetting)).check(matches(withText("Dostępność")))
+        checkHint("abraham lin", "abraham lincoln", keyboardAwareEditText)
+        checkHint("goog", "google", keyboardAwareEditText)
+        checkHint("wikipe", "wikipedia", keyboardAwareEditText)
+        checkHint("faceb", "facebook", keyboardAwareEditText)
+        checkHint("albert ein", "albert einstein", keyboardAwareEditText)
+    }
+
+    private fun checkHint(input: String, hint: String, keyboardAwareEditText: ViewInteraction) {
+        keyboardAwareEditText.perform(
+            replaceText(input),
+            closeSoftKeyboard(),
+        )
+
+        onView(isRoot()).perform(waitForView(withId(R.id.phrase)))
+        onView(firstMatch(withId(R.id.phrase))).check(matches(withSubstring(hint)))
+        onView(withId(R.id.clearTextButton)).perform(click())
     }
 }

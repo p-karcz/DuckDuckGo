@@ -23,6 +23,8 @@ import androidx.test.espresso.ViewAction
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.util.HumanReadables
 import androidx.test.espresso.util.TreeIterables
+import org.hamcrest.BaseMatcher
+import org.hamcrest.Description
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers
 import org.hamcrest.StringDescription
@@ -60,6 +62,23 @@ fun waitForView(viewMatcher: Matcher<View>, timeout: Long = 10000, waitForDispla
                 .withViewDescription(HumanReadables.describe(view))
                 .withCause(TimeoutException())
                 .build()
+        }
+    }
+}
+
+fun firstMatch(matcher: Matcher<View>): Matcher<View> {
+    return object : BaseMatcher<View>() {
+        var wasMatched = false
+        override fun matches(item: Any?): Boolean {
+            if (!wasMatched && matcher.matches(item)) {
+                wasMatched = true
+                return true
+            }
+            return false
+        }
+
+        override fun describeTo(description: Description) {
+            description.appendText("First element")
         }
     }
 }
