@@ -28,7 +28,7 @@ import com.duckduckgo.app.httpsupgrade.api.HttpsFalsePositivesJsonAdapter
 import com.duckduckgo.app.httpsupgrade.store.HttpsDataPersister
 import com.duckduckgo.app.privacy.db.UserWhitelistDao
 import com.duckduckgo.feature.toggles.api.FeatureToggle
-import com.duckduckgo.httpsupgrade.store.PlayHttpsEmbeddedDataPersister
+//import com.duckduckgo.httpsupgrade.store.PlayHttpsEmbeddedDataPersister
 import com.duckduckgo.privacy.config.api.Https
 import com.duckduckgo.privacy.config.api.PrivacyFeatureName
 import org.mockito.kotlin.mock
@@ -70,11 +70,11 @@ class HttpsEmbeddedDataIntegrationTest {
             db
         )
 
-        val embeddedDataPersister = PlayHttpsEmbeddedDataPersister(persister, binaryDataStore, httpsBloomSpecDao, context, moshi)
+//        val embeddedDataPersister = PlayHttpsEmbeddedDataPersister(persister, binaryDataStore, httpsBloomSpecDao, context, moshi)
 
-        val factory = HttpsBloomFilterFactoryImpl(httpsBloomSpecDao, binaryDataStore, embeddedDataPersister, persister)
-        httpsUpgrader = HttpsUpgraderImpl(factory, httpsFalsePositivesDao, mockUserAllowlistDao, mockFeatureToggle, mockHttps)
-        httpsUpgrader.reloadData()
+//        val factory = HttpsBloomFilterFactoryImpl(httpsBloomSpecDao, binaryDataStore, embeddedDataPersister, persister)
+//        httpsUpgrader = HttpsUpgraderImpl(factory, httpsFalsePositivesDao, mockUserAllowlistDao, mockFeatureToggle, mockHttps)
+//        httpsUpgrader.reloadData()
     }
 
     @After

@@ -267,6 +267,8 @@ dependencies {
 
     androidTestImplementation project(path: ':common-test')
     testImplementation project(path: ':common-test')
+
+    androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
 }
 
 tasks.register('fastlaneVersionCode') {
