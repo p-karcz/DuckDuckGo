@@ -90,7 +90,7 @@ class HeavyLoadTest {
     }
 
     @Test
-    fun oneThousandBookmarks() {
+    fun fiveHundredBookmarks() {
 
         fun ViewInteraction.isClickable(): Boolean {
             try {
