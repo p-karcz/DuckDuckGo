@@ -17,6 +17,7 @@
 package com.duckduckgo.espresso
 
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
@@ -39,16 +40,25 @@ class BasicJourneyTest {
     @get:Rule
     var activityScenarioRule = activityScenarioRule<BrowserActivity>()
 
-    @Test @UserJourney
-    fun browser_openPopUp() {
-        // since we use a fake toolbar, we want to wait until the real one is visible
-        onView(isRoot()).perform(waitForView(withId(R.id.browserMenu)))
+    @Test
+    fun browserOpenPopUp() {
+        val keyboardAwareEditText = onView(withId(R.id.omnibarTextInput))
 
-        // tap on PopupMenu
-        onView(withId(R.id.browserMenu)).perform(click())
+        keyboardAwareEditText.perform(
+            click(),
+            ViewActions.replaceText("youtube.com"),
+            ViewActions.closeSoftKeyboard(),
+            ViewActions.pressImeActionButton()
+        )
 
-        // check that the forward arrow is visible
-        onView(withId(R.id.forwardPopupMenuItem)).check(matches(isDisplayed()))
+        for (i in 1..25) {
+            onView(isRoot()).perform(waitForView(withId(R.id.browserMenu)))
+
+            // tap on PopupMenu
+            onView(withId(R.id.browserMenu)).perform(click())
+
+            // check that the forward arrow is visible
+            onView(withId(R.id.forwardPopupMenuItem)).check(matches(isDisplayed()))
+        }
     }
-
 }
